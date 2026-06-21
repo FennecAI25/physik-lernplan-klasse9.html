@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physik Lernplan – Klasse 9 Bayern</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f5f5f0;color:#1a1a1a;font-size:15px}
+.app{max-width:780px;margin:0 auto;padding:1.5rem 1rem 3rem}
+h1{font-size:20px;font-weight:600;margin-bottom:4px}
+.subtitle{font-size:13px;color:#666;margin-bottom:1.2rem}
+
+.countdown{background:#fde8e8;border:1px solid #f5c6c6;border-radius:10px;padding:10px 16px;font-size:13px;color:#9B1C1C;margin-bottom:1.2rem;font-weight:500}
+
+.tab-bar{display:flex;gap:0;margin-bottom:1.5rem;border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fff}
+.tab{flex:1;padding:10px 4px;font-size:12px;border:none;background:none;cursor:pointer;color:#666;border-right:1px solid #ddd;transition:background .15s;font-family:inherit}
+.tab:last-child{border-right:none}
+.tab.active{background:#7c3aed;color:#fff;font-weight:500}
+.panel{display:none}.panel.active{display:block}
+
+.prog-wrap{margin-bottom:1.2rem}
+.prog-label{font-size:12px;color:#666;margin-bottom:5px;display:flex;justify-content:space-between}
+.prog-bar{height:6px;background:#e5e5e5;border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:#7c3aed;border-radius:3px;transition:width .4s}
+
+.day-card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.day-header{display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+.badge{display:inline-block;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.b-date{background:#ede9fe;color:#5b21b6}
+.b-th{background:#fef3e2;color:#854F0B}
+.b-exam{background:#fde8e8;color:#9B1C1C;font-weight:700}
+.day-title{font-weight:500;font-size:14px;flex:1;min-width:120px}
+.done-btn{margin-left:auto;font-size:11px;border:1px solid #ddd;border-radius:20px;padding:3px 10px;background:none;cursor:pointer;color:#666;font-family:inherit}
+.done-btn.done{background:#e8f5e9;color:#1a7c34;border-color:#a5d6a7}
+
+.session{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.stime{color:#888;min-width:72px;font-size:12px;padding-top:3px}
+.sblock{flex:1;border-radius:7px;padding:5px 10px;font-size:13px;line-height:1.5}
+.lern{background:#ede9fe;color:#3b0764}
+.pause{background:#e8f5e9;color:#1a4731}
+.quiz{background:#fef3e2;color:#633806}
+.wdh{background:#e0f2fe;color:#0c4a6e}
+.aufg{background:#fce7f3;color:#831843}
+
+/* Summary */
+.topic-card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px}
+.topic-hdr{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.th-tag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.atom-tag{background:#ede9fe;color:#5b21b6}
+.waerm-tag{background:#fef3e2;color:#854F0B}
+.ttitle{font-weight:500;font-size:14px;flex:1}
+.chev{font-size:18px;color:#aaa;transition:transform .2s;line-height:1}
+.topic-body{display:none;margin-top:12px;border-top:1px solid #f0f0f0;padding-top:12px;font-size:13px;line-height:1.75;color:#222}
+.topic-body.open{display:block}
+.kw-wrap{margin-bottom:10px}
+.kw{display:inline-block;font-size:11px;padding:2px 7px;border-radius:20px;margin:2px}
+.kw-a{background:#ede9fe;color:#5b21b6}
+.kw-w{background:#fef3e2;color:#854F0B}
+.topic-body ul{padding-left:1.3rem}
+.topic-body li{margin-bottom:4px}
+.formula-box{background:#1e1b4b;color:#e0e7ff;border-radius:8px;padding:10px 14px;font-family:monospace;font-size:13px;margin:10px 0;line-height:2}
+.tip-box{background:#fef3e2;border-radius:7px;padding:8px 12px;font-size:12px;color:#633806;margin-top:8px}
+.must-box{background:#fde8e8;border-radius:7px;padding:8px 12px;font-size:12px;color:#9B1C1C;margin-top:6px;font-weight:500}
+
+/* Exercises */
+.ex-card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.ex-num{font-size:11px;font-weight:600;color:#7c3aed;margin-bottom:5px}
+.ex-q{font-size:14px;font-weight:500;margin-bottom:6px;line-height:1.5}
+.ex-hint{font-size:12px;color:#888;background:#f9f9f9;border-radius:6px;padding:6px 10px;margin-bottom:10px}
+.show-btn{border:1px solid #ddd;border-radius:7px;padding:6px 14px;font-size:12px;background:none;cursor:pointer;color:#444;font-family:inherit}
+.show-btn:hover{background:#f5f5f5}
+.answer{display:none;margin-top:10px;background:#e8f5e9;border-radius:8px;padding:10px 14px;font-size:13px;color:#1a4731;line-height:1.8}
+.answer.open{display:block}
+.answer ul{padding-left:1.2rem}
+.answer li{margin-bottom:3px}
+.answer .fml{background:#14532d;color:#dcfce7;border-radius:6px;padding:6px 12px;font-family:monospace;font-size:13px;display:inline-block;margin:4px 0}
+
+/* Quiz */
+.quiz-card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:1.25rem;margin-bottom:12px}
+.quiz-meta{font-size:12px;color:#888;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.quiz-topic{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;background:#ede9fe;color:#5b21b6}
+.quiz-q{font-size:14px;font-weight:500;margin-bottom:14px;line-height:1.5}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.qopt{border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:13px;cursor:pointer;background:#fff;text-align:left;color:#1a1a1a;transition:background .15s;font-family:inherit;line-height:1.4}
+.qopt:hover{background:#f5f5f5}
+.qopt.correct{background:#e8f5e9;color:#1a4731;border-color:#a5d6a7;font-weight:500}
+.qopt.wrong{background:#fde8e8;color:#9B1C1C;border-color:#f5c6c6}
+.qopt:disabled{cursor:default}
+.q-fb{font-size:13px;color:#666;min-height:18px;margin-bottom:10px}
+.quiz-nav{display:flex;justify-content:flex-end}
+.next-btn{background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:8px 20px;font-size:13px;cursor:pointer;font-family:inherit}
+.next-btn:hover{background:#6d28d9}
+
+.score-box{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:2.5rem 1.5rem;text-align:center}
+.score-big{font-size:56px;font-weight:700;color:#7c3aed;line-height:1}
+.score-label{font-size:14px;color:#666;margin-top:8px;margin-bottom:1rem}
+.score-msg{font-size:15px;font-weight:500;margin-bottom:1.5rem}
+.restart-btn{border:1px solid #ddd;border-radius:8px;padding:8px 20px;font-size:13px;background:none;cursor:pointer;font-family:inherit;color:#444}
+
+@media(max-width:500px){
+  .quiz-opts{grid-template-columns:1fr}
+  .tab{font-size:11px;padding:8px 3px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>⚛️ Physik-Lernplan – Atome &amp; Wärmelehre</h1>
+  <p class="subtitle">Klasse 9 Gymnasium Bayern &nbsp;·&nbsp; Schulaufgabe: Di, 30.06.2026 &nbsp;·&nbsp; 45 min/Tag</p>
+
+  <div class="countdown" id="countdown">📅 Berechne...</div>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="showPanel('plan',this)">📅 Lernplan</button>
+    <button class="tab" onclick="showPanel('summary',this)">📚 Zusammenfassung</button>
+    <button class="tab" onclick="showPanel('uebungen',this)">✏️ Übungen</button>
+    <button class="tab" onclick="showPanel('quiz',this)">⭐ Quiz</button>
+  </div>
+
+  <div class="panel active" id="panel-plan">
+    <div class="prog-wrap">
+      <div class="prog-label"><span id="prog-label">0 von 8 Einheiten erledigt</span><span id="prog-pct">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <div id="days-container"></div>
+  </div>
+
+  <div class="panel" id="panel-summary">
+    <div id="topics-container"></div>
+  </div>
+
+  <div class="panel" id="panel-uebungen">
+    <div id="exercises-container"></div>
+  </div>
+
+  <div class="panel" id="panel-quiz">
+    <div id="quiz-container">
+      <div class="quiz-card">
+        <div class="quiz-meta">
+          <span id="q-counter">Frage 1 von 16</span>
+          <span id="q-topic-badge" class="quiz-topic">Atome</span>
+          <span id="q-score">0 richtig</span>
+        </div>
+        <div class="quiz-q" id="q-text"></div>
+        <div class="quiz-opts" id="q-opts"></div>
+        <div class="q-fb" id="q-fb"></div>
+        <div class="quiz-nav"><button class="next-btn" onclick="nextQ()">Weiter →</button></div>
+      </div>
+    </div>
+    <div class="score-box" id="score-box" style="display:none">
+      <div class="score-big" id="score-num"></div>
+      <div class="score-label" id="score-pct"></div>
+      <div class="score-msg" id="score-msg"></div>
+      <button class="restart-btn" onclick="restartQuiz()">↺ Nochmal versuchen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = [
+  {date:"So, 21.06.",th:"III.1 + III.2",title:"Atome – Photonenmodell & Energiestufen",sessions:[
+    {type:"lern",time:"0–15 min",text:"Photonenmodell: Licht besteht aus Photonen, E = h·f. Emission & Absorption verstehen."},
+    {type:"pause",time:"15–18 min",text:"Pause – kurz aufstehen & trinken!"},
+    {type:"lern",time:"18–33 min",text:"Energiestufenmodell: Grundzustand, angeregte Zustände, Übergänge → Spektrallinien."},
+    {type:"quiz",time:"33–45 min",text:"Quiz-Tab: Fragen zu Atome (III.1 & III.2) durcharbeiten."}
+  ]},
+  {date:"Mo, 22.06.",th:"IV.1 + IV.2",title:"Materie & innere Energie, Wärmeübertragung",sessions:[
+    {type:"lern",time:"0–15 min",text:"IV.1: Atome/Moleküle in Bewegung → innere Energie U = kinetische + potenzielle Energie der Teilchen."},
+    {type:"pause",time:"15–18 min",text:"Pause"},
+    {type:"lern",time:"18–33 min",text:"IV.2: Wärmeleitung, Konvektion, Wärmestrahlung – Unterschiede & Beispiele."},
+    {type:"aufg",time:"33–45 min",text:"Übungen-Tab: Aufgabe 1 & 2 lösen (Energie & Wärmeübertragung)."}
+  ]},
+  {date:"Di, 23.06.",th:"IV.3",title:"Änderung der inneren Energie – Formeln",sessions:[
+    {type:"lern",time:"0–18 min",text:"Q = m · c · ΔT auswendig lernen + anwenden. Spezifische Wärmekapazität c verstehen."},
+    {type:"pause",time:"18–21 min",text:"Pause"},
+    {type:"aufg",time:"21–38 min",text:"Übungen-Tab: Aufgabe 3 & 4 – Rechenaufgaben Q = m·c·ΔT mit Zahlen lösen."},
+    {type:"quiz",time:"38–45 min",text:"Quiz: Wärmelehre-Fragen – IV.3 testen."}
+  ]},
+  {date:"Mi, 24.06.",th:"IV.4",title:"Aggregatzustandswechsel",sessions:[
+    {type:"lern",time:"0–15 min",text:"Schmelzen, Erstarren, Verdampfen, Kondensieren, Sublimation. Schmelz- & Verdampfungswärme: Q = m · L."},
+    {type:"pause",time:"15–18 min",text:"Pause"},
+    {type:"lern",time:"18–33 min",text:"Plateaus im T-t-Diagramm erklären können. Warum bleibt Temperatur beim Phasenübergang konstant?"},
+    {type:"aufg",time:"33–45 min",text:"Übungen-Tab: Aufgabe 5 – T-t-Diagramm beschriften & Aufgabe 6 – Q = m·L Rechnung."}
+  ]},
+  {date:"Do, 25.06.",th:"IV.5",title:"Druck in Gasen",sessions:[
+    {type:"lern",time:"0–15 min",text:"Druck p = F/A (in Pascal). Boyle-Mariotte: p·V = const (bei T=const). Gasgesetze."},
+    {type:"pause",time:"15–18 min",text:"Pause"},
+    {type:"aufg",time:"18–33 min",text:"Übungen-Tab: Aufgabe 7 & 8 – Druck berechnen, p·V = const anwenden."},
+    {type:"quiz",time:"33–45 min",text:"Quiz komplett durchlaufen – alle Themen testen."}
+  ]},
+  {date:"Fr, 26.06.",th:"Alle Themen",title:"Formel-Training & Rechenaufgaben",sessions:[
+    {type:"wdh",time:"0–15 min",text:"Alle Formeln auf einen Zettel schreiben: E=h·f, Q=m·c·ΔT, Q=m·L, p=F/A, p·V=const."},
+    {type:"pause",time:"15–18 min",text:"Pause"},
+    {type:"aufg",time:"18–38 min",text:"Übungen-Tab: Aufgaben 3–8 nochmals lösen – diesmal ohne Lösung schauen!"},
+    {type:"quiz",time:"38–45 min",text:"Quiz: Ziel 12/16 oder mehr erreichen."}
+  ]},
+  {date:"Sa, 27.06.",th:"Alle Themen",title:"leifiphysik.de + Selbsttest",sessions:[
+    {type:"wdh",time:"0–20 min",text:"leifiphysik.de → Atome → Photonenmodell + Energiestufen: Selbsttest & Aufgaben machen."},
+    {type:"pause",time:"20–23 min",text:"Pause"},
+    {type:"wdh",time:"23–45 min",text:"leifiphysik.de → Wärmelehre → Aufgaben zu Q=m·c·ΔT, Aggregatzustand, Druck lösen."}
+  ]},
+  {date:"Mo, 29.06.",th:"FINAL",title:"Letzte Wiederholung – Generalprobe",sessions:[
+    {type:"wdh",time:"0–15 min",text:"Schwache Stellen aus Quiz nochmal in der Zusammenfassung nachlesen."},
+    {type:"pause",time:"15–18 min",text:"Pause"},
+    {type:"wdh",time:"18–35 min",text:"Alle Formeln nochmal aufschreiben + je 1 Rechenbeispiel pro Formel."},
+    {type:"wdh",time:"35–45 min",text:"Früh ins Bett! Ausgeruht in die Prüfung. Viel Erfolg! 🎯"}
+  ]},
+];
+
+const TOPICS = [
+  {tag:"atom-tag",tagLabel:"III.1",title:"Photonenmodell",keys:["kw-a"],kws:["Photon","E = h·f","Emission","Absorption","Planck","Lichtquant"],
+  must:"Formel E = h·f MUSS sitzen! h = 6,626·10⁻³⁴ J·s",
+  body:`<ul>
+<li><strong>Licht besteht aus Photonen</strong> (Lichtquanten) – diskrete Energiepakete, keine Wellen.</li>
+<li><strong>Energie eines Photons:</strong> E = h · f &nbsp;(h = Plancksches Wirkungsquantum, f = Frequenz)</li>
+<li><strong>Emission:</strong> Atom gibt Energie ab → sendet Photon aus (Elektron fällt auf niedrigere Stufe).</li>
+<li><strong>Absorption:</strong> Atom nimmt Energie auf → Photon wird verschluckt (Elektron springt auf höhere Stufe).</li>
+<li><strong>Nur bestimmte Energien:</strong> Ein Atom kann nur Photonen absorbieren/emittieren, deren Energie genau dem Stufenunterschied entspricht → diskrete Spektrallinien.</li>
+<li><strong>Photoeffekt:</strong> Photon trifft Metall → Elektron wird herausgeschlagen (wenn E ≥ Austrittsarbeit).</li>
+</ul>
+<div class="formula-box">E = h · f &nbsp;&nbsp; (E in Joule [J], h = 6,626·10⁻³⁴ J·s, f in Hz)</div>`,
+  tip:"Frequenz f und Wellenlänge λ: c = f·λ → f = c/λ (c = 3·10⁸ m/s)"},
+
+  {tag:"atom-tag",tagLabel:"III.2",title:"Energiestufenmodell",keys:["kw-a"],kws:["Grundzustand","angeregte Zustände","Ionisation","Spektrallinie","Übergang","eV"],
+  must:"Übergänge im Diagramm einzeichnen und Energie berechnen können!",
+  body:`<ul>
+<li><strong>Grundzustand:</strong> niedrigste Energiestufe – Elektron ist stabil (E₁, meist negativ angegeben).</li>
+<li><strong>Angeregte Zustände:</strong> höhere Energiestufen E₂, E₃, ... – Elektron wurde angeregt (z.B. durch Wärmezufuhr oder Lichtabsorption).</li>
+<li><strong>Ionisationsenergie:</strong> Energie, um Elektron vollständig zu entfernen (E = 0 eV).</li>
+<li><strong>Übergang nach unten:</strong> Atom emittiert Photon mit E = E_oben − E_unten.</li>
+<li><strong>Übergang nach oben:</strong> Atom absorbiert Photon mit genau dieser Energie.</li>
+<li><strong>Spektrallinien:</strong> Jedes Element hat einzigartiges Linienspektrum → Fingerabdruck des Atoms.</li>
+<li><strong>Einheit:</strong> Energie oft in Elektronenvolt [eV]: 1 eV = 1,6·10⁻¹⁹ J</li>
+</ul>
+<div class="formula-box">ΔE = E₂ − E₁ = h · f &nbsp;&nbsp; → Wellenlänge: λ = h·c / ΔE</div>`,
+  tip:"Im Diagramm: Pfeil nach unten = Emission (Photon raus), Pfeil nach oben = Absorption (Photon rein)."},
+
+  {tag:"waerm-tag",tagLabel:"IV.1",title:"Materie & innere Energie",keys:["kw-w"],kws:["innere Energie","Teilchenbewegung","kinetisch","potenziell","Temperatur","kBoltzmann"],
+  must:"Innere Energie U = Summe aller kinetischen + potenziellen Energien der Teilchen.",
+  body:`<ul>
+<li><strong>Alle Materie</strong> besteht aus Atomen/Molekülen in ständiger ungeordneter Bewegung.</li>
+<li><strong>Innere Energie U</strong> = Summe der kinetischen Energie (Bewegung) + potenziellen Energie (Anziehung) aller Teilchen.</li>
+<li><strong>Temperatur T</strong> ist ein Maß für die mittlere kinetische Energie der Teilchen: höhere T → schnellere Teilchen.</li>
+<li><strong>Absoluter Nullpunkt:</strong> 0 Kelvin = −273,15 °C → Teilchen ruhen, U = Minimum.</li>
+<li><strong>Umrechnung:</strong> T [K] = T [°C] + 273,15</li>
+<li>Bei Feststoffen: Teilchen schwingen um feste Plätze. Bei Flüssigkeiten: gleiten aneinander. Bei Gasen: fliegen frei.</li>
+</ul>
+<div class="formula-box">T [K] = ϑ [°C] + 273,15 &nbsp;&nbsp; E_kin,Mittel ~ T</div>`,
+  tip:"Temperaturerhöhung → mehr kinetische Energie → größere innere Energie."},
+
+  {tag:"waerm-tag",tagLabel:"IV.2",title:"Wärme & Übertragung",keys:["kw-w"],kws:["Wärmeleitung","Konvektion","Strahlung","Wärmemenge Q","Gleichgewicht"],
+  must:"3 Arten der Wärmeübertragung mit Beispielen nennen können!",
+  body:`<ul>
+<li><strong>Wärmeleitung:</strong> Energie wird durch direkten Kontakt von Teilchen zu Teilchen weitergegeben. Kein Materialtransport. Beispiel: Metallstab im Feuer.</li>
+<li><strong>Konvektion (Wärmeströmung):</strong> Warme Materie steigt auf, kühle sinkt ab → Kreislauf. Nur in Flüssigkeiten & Gasen. Beispiel: Heizung erwärmt Raumluft.</li>
+<li><strong>Wärmestrahlung:</strong> Energie wird als elektromagnetische Strahlung (Infrarot) übertragen. Braucht kein Medium. Beispiel: Sonnenwärme, Lagerfeuer.</li>
+<li><strong>Wärmemenge Q:</strong> Energie, die als Wärme übertragen wird (Einheit: Joule [J]).</li>
+<li><strong>Thermisches Gleichgewicht:</strong> Wärme fließt immer von warm nach kalt, bis T₁ = T₂.</li>
+</ul>`,
+  tip:"Vakuum (Weltall): nur Strahlung möglich! Thermosflasche: alle 3 Arten werden blockiert."},
+
+  {tag:"waerm-tag",tagLabel:"IV.3",title:"Änderung der inneren Energie",keys:["kw-w"],kws:["Q = m·c·ΔT","spez. Wärmekapazität","c","ΔT","Kalorimeter"],
+  must:"Q = m · c · ΔT ist die WICHTIGSTE Formel – auswendig lernen und anwenden!",
+  body:`<ul>
+<li><strong>Zugeführte Wärmemenge Q</strong> ändert die innere Energie und damit die Temperatur.</li>
+<li><strong>Formel:</strong> Q = m · c · ΔT</li>
+<li>m = Masse in kg, c = spezifische Wärmekapazität in J/(kg·K), ΔT = Temperaturänderung in K oder °C</li>
+<li><strong>Spezifische Wärmekapazität c</strong> gibt an, wie viel Energie nötig ist, um 1 kg des Stoffes um 1 K zu erwärmen.</li>
+<li>Wichtige Werte: Wasser c = 4180 J/(kg·K), Eisen c ≈ 450 J/(kg·K), Luft c ≈ 1005 J/(kg·K).</li>
+<li><strong>Kalorimeter:</strong> Gerät zum Messen von Wärmemengen (thermisch isoliert).</li>
+</ul>
+<div class="formula-box">Q = m · c · ΔT &nbsp;&nbsp; | &nbsp;&nbsp; ΔT = Q / (m·c) &nbsp;&nbsp; | &nbsp;&nbsp; m = Q / (c·ΔT)</div>`,
+  tip:"Wasser hat sehr hohe Wärmekapazität → deshalb als Kühlmittel und Heizungswasser ideal."},
+
+  {tag:"waerm-tag",tagLabel:"IV.4",title:"Aggregatzustandswechsel",keys:["kw-w"],kws:["Schmelzen","Verdampfen","Kondensieren","Erstarren","Q = m·L","Plateau"],
+  must:"T-t-Diagramm erklären + Q = m·L anwenden können!",
+  body:`<ul>
+<li><strong>4 Zustände:</strong> fest → flüssig (Schmelzen) → gasförmig (Verdampfen) / und zurück.</li>
+<li><strong>Beim Phasenübergang:</strong> Temperatur bleibt konstant! (Plateau im T-t-Diagramm) → zugeführte Energie bricht Bindungen auf.</li>
+<li><strong>Schmelzwärme (Fusionswärme):</strong> Q = m · Ls &nbsp;(Ls = spez. Schmelzwärme, Wasser: 334 kJ/kg)</li>
+<li><strong>Verdampfungswärme:</strong> Q = m · Lv &nbsp;(Lv = spez. Verdampfungswärme, Wasser: 2257 kJ/kg)</li>
+<li><strong>T-t-Diagramm Wasser:</strong> Anstieg (Erwärmen Eis) → Plateau bei 0°C (Schmelzen) → Anstieg (Erwärmen Wasser) → Plateau bei 100°C (Verdampfen).</li>
+<li><strong>Umkehrvorgänge:</strong> Kondensation gibt Energie ab, Erstarren gibt Energie ab.</li>
+</ul>
+<div class="formula-box">Q = m · L &nbsp;&nbsp; (L = spez. Schmelz- oder Verdampfungswärme in J/kg)</div>`,
+  tip:"Verdampfung braucht viel mehr Energie als Schmelzen (Lv >> Ls) → deshalb verbrennt Dampf so stark!"},
+
+  {tag:"waerm-tag",tagLabel:"IV.5",title:"Druck in Gasen",keys:["kw-w"],kws:["p = F/A","Pascal","Boyle-Mariotte","p·V=const","Gasgesetz","Atmosphäre"],
+  must:"p = F/A und p·V = const (Boyle-Mariotte) auswendig + Aufgaben lösen können!",
+  body:`<ul>
+<li><strong>Druck p</strong> = Kraft pro Fläche: p = F / A (Einheit: Pascal [Pa] = N/m²)</li>
+<li><strong>Normaldruck:</strong> p₀ = 101.325 Pa ≈ 1 bar = 1 atm.</li>
+<li><strong>Druck in Gasen:</strong> Gasteilchen stoßen gegen Wände → üben Druck aus. Mehr Teilchen / höhere T → größerer Druck.</li>
+<li><strong>Boyle-Mariotte-Gesetz:</strong> Bei konstanter Temperatur: p · V = const</li>
+<li>→ Doppelter Druck = halbes Volumen, und umgekehrt.</li>
+<li><strong>Gay-Lussac:</strong> Bei konstantem Volumen: p / T = const (p steigt mit T).</li>
+<li><strong>Allgemeines Gasgesetz:</strong> p · V / T = const</li>
+</ul>
+<div class="formula-box">p = F / A &nbsp;&nbsp; | &nbsp;&nbsp; p₁ · V₁ = p₂ · V₂ &nbsp;&nbsp; | &nbsp;&nbsp; p₁/T₁ = p₂/T₂</div>`,
+  tip:"Einheiten immer prüfen: Druck in Pa, Volumen in m³, Temperatur in Kelvin!"},
+];
+
+const EXERCISES = [
+  {num:1,th:"IV.1",q:"Ein Körper aus Eisen (m = 2 kg) wird von 20°C auf 80°C erhitzt. Wie viel Wärme Q wird benötigt? (c_Eisen = 450 J/(kg·K))",
+  hint:"Formel: Q = m · c · ΔT. ΔT = 80 − 20 = 60 K.",
+  ans:`<strong>Gegeben:</strong> m = 2 kg, c = 450 J/(kg·K), ΔT = 60 K<br>
+<strong>Formel:</strong> Q = m · c · ΔT<br>
+<div class="fml">Q = 2 kg · 450 J/(kg·K) · 60 K = 54.000 J = 54 kJ</div>
+<strong>Antwort:</strong> Es werden <strong>54 kJ</strong> Wärme benötigt.`},
+
+  {num:2,th:"IV.2",q:"Erkläre die drei Arten der Wärmeübertragung. Nenne je ein konkretes Beispiel und erkläre, ob Materie transportiert wird.",
+  hint:"Leitung / Konvektion / Strahlung – Schlüsselunterschied: Materialtransport ja/nein, Medium nötig ja/nein",
+  ans:`<ul>
+<li><strong>Wärmeleitung:</strong> Energie geht von Teilchen zu Teilchen weiter. Kein Materialtransport. Braucht festes Medium. Bsp: Metallstab im Feuer wird heiß.</li>
+<li><strong>Konvektion:</strong> Warme Materie bewegt sich (Auftrieb). Materialtransport findet statt. Nur in Flüssigkeiten/Gasen. Bsp: Heizung wärmt Raumluft durch Luftströmung.</li>
+<li><strong>Strahlung:</strong> Energie als Infrarotstrahlung. Kein Medium nötig. Bsp: Sonne wärmt Erde durch Vakuum.</li>
+</ul>`},
+
+  {num:3,th:"IV.3",q:"In einem Kalorimeter werden 0,5 kg Wasser von 15°C auf 65°C erwärmt. Berechne die aufgenommene Wärmemenge. (c_Wasser = 4180 J/(kg·K))",
+  hint:"Q = m · c · ΔT, ΔT = 65 − 15 = 50 K",
+  ans:`<strong>Gegeben:</strong> m = 0,5 kg, c = 4180 J/(kg·K), ΔT = 50 K<br>
+<div class="fml">Q = 0,5 · 4180 · 50 = 104.500 J = 104,5 kJ</div>
+<strong>Antwort:</strong> Das Wasser nimmt <strong>104,5 kJ</strong> auf.`},
+
+  {num:4,th:"IV.3",q:"Welche Temperaturerhöhung erfährt 3 kg Aluminium (c = 900 J/(kg·K)), wenn ihm 27 kJ Wärme zugeführt werden?",
+  hint:"Formel nach ΔT umstellen: ΔT = Q / (m · c)",
+  ans:`<strong>Gegeben:</strong> m = 3 kg, c = 900 J/(kg·K), Q = 27.000 J<br>
+<div class="fml">ΔT = Q / (m · c) = 27.000 / (3 · 900) = 27.000 / 2700 = 10 K</div>
+<strong>Antwort:</strong> Das Aluminium erwärmt sich um <strong>10 K (= 10°C)</strong>.`},
+
+  {num:5,th:"IV.4",q:"Beschrifte ein T-t-Diagramm für Wasser beim Erhitzen von −20°C bis 120°C. Erkläre, was an den Plateaus passiert.",
+  hint:"Plateaus bei 0°C (Schmelzen) und 100°C (Verdampfen). Warum bleibt T konstant?",
+  ans:`<strong>Abschnitte:</strong><br>
+<ul>
+<li>−20°C → 0°C: Eis wird erwärmt (T steigt)</li>
+<li>0°C: <strong>Plateau</strong> – Schmelzen. Energie bricht Bindungen im Eis auf, T bleibt konstant.</li>
+<li>0°C → 100°C: Wasser wird erwärmt (T steigt)</li>
+<li>100°C: <strong>Plateau</strong> – Verdampfen. Energie trennt Moleküle vollständig, T bleibt konstant.</li>
+<li>über 100°C: Wasserdampf wird erwärmt.</li>
+</ul>
+<strong>Grund für Plateau:</strong> Die zugeführte Energie wird komplett für den Phasenübergang (Bindungsenergie) verbraucht – keine kinetische Energie → keine Temperaturerhöhung.`},
+
+  {num:6,th:"IV.4",q:"Wie viel Energie wird benötigt, um 2 kg Eis bei 0°C vollständig zu schmelzen? (Spez. Schmelzwärme Wasser: L = 334.000 J/kg)",
+  hint:"Formel: Q = m · L (kein ΔT, da T konstant beim Phasenübergang!)",
+  ans:`<strong>Gegeben:</strong> m = 2 kg, L = 334.000 J/kg<br>
+<div class="fml">Q = m · L = 2 · 334.000 = 668.000 J = 668 kJ</div>
+<strong>Antwort:</strong> Es werden <strong>668 kJ</strong> benötigt, um das Eis zu schmelzen.`},
+
+  {num:7,th:"IV.5",q:"Ein Gas hat bei p₁ = 2 bar ein Volumen von V₁ = 3 L. Auf welches Volumen V₂ wird es komprimiert, wenn der Druck auf p₂ = 6 bar steigt? (T = konstant)",
+  hint:"Boyle-Mariotte: p₁ · V₁ = p₂ · V₂ → V₂ = (p₁ · V₁) / p₂",
+  ans:`<strong>Gegeben:</strong> p₁ = 2 bar, V₁ = 3 L, p₂ = 6 bar<br>
+<div class="fml">p₁ · V₁ = p₂ · V₂ → V₂ = (2 · 3) / 6 = 1 L</div>
+<strong>Antwort:</strong> Das Gas wird auf <strong>V₂ = 1 L</strong> komprimiert.`},
+
+  {num:8,th:"IV.5",q:"Eine Fläche von 0,02 m² wird mit einer Kraft von 50 N belastet. Berechne den Druck in Pascal und in bar.",
+  hint:"p = F / A. 1 bar = 100.000 Pa.",
+  ans:`<strong>Gegeben:</strong> F = 50 N, A = 0,02 m²<br>
+<div class="fml">p = F / A = 50 / 0,02 = 2.500 Pa = 0,025 bar</div>
+<strong>Antwort:</strong> Der Druck beträgt <strong>2.500 Pa = 0,025 bar</strong>.`},
+];
+
+const QUIZ = [
+  {t:"Atome",q:"Was beschreibt das Photonenmodell des Lichts?",opts:["Licht ist eine kontinuierliche Welle","Licht besteht aus diskreten Energiepaketen (Photonen)","Licht hat keine Masse","Licht ist ein Teilchenstrom aus Elektronen"],a:1},
+  {t:"Atome",q:"Wie lautet die Formel für die Energie eines Photons?",opts:["E = m·c²","E = h·f","E = p·V","E = m·c·ΔT"],a:1},
+  {t:"Atome",q:"Was passiert, wenn ein Elektron von einer höheren auf eine niedrigere Energiestufe fällt?",opts:["Es nimmt ein Photon auf","Es gibt ein Photon ab","Es verlässt das Atom","Die Temperatur sinkt"],a:1},
+  {t:"Atome",q:"Was ist der Grundzustand eines Atoms?",opts:["Der energiereichste Zustand","Der Zustand ohne Elektronen","Der Zustand niedrigster Energie","Der ionisierte Zustand"],a:2},
+  {t:"Wärme",q:"Was ist die innere Energie eines Körpers?",opts:["Nur die kinetische Energie der Atome","Nur die potenzielle Energie","Summe aller kinetischen und potenziellen Energien der Teilchen","Die Wärme, die ein Körper abgibt"],a:2},
+  {t:"Wärme",q:"Welche Wärmeübertragungsart braucht KEIN Medium?",opts:["Wärmeleitung","Konvektion","Wärmestrahlung","Alle brauchen ein Medium"],a:2},
+  {t:"Wärme",q:"Wie lautet die Formel zur Berechnung der aufgenommenen Wärmemenge?",opts:["Q = p · V","Q = m · c · ΔT","Q = h · f","Q = F · A"],a:1},
+  {t:"Wärme",q:"Welche spezifische Wärmekapazität hat Wasser (ca.)?",opts:["450 J/(kg·K)","1005 J/(kg·K)","4180 J/(kg·K)","2200 J/(kg·K)"],a:2},
+  {t:"Wärme",q:"Was passiert mit der Temperatur eines Stoffes während eines Aggregatzustandswechsels?",opts:["Sie steigt schnell an","Sie sinkt","Sie bleibt konstant (Plateau)","Sie schwankt stark"],a:2},
+  {t:"Wärme",q:"Welche Formel gilt beim Schmelzen oder Verdampfen?",opts:["Q = m · c · ΔT","Q = m · L","Q = p · V","Q = h · f"],a:1},
+  {t:"Wärme",q:"Was besagt das Gesetz von Boyle-Mariotte?",opts:["p + V = const","p · V = const (bei T = const)","p / V = const","p · T = const"],a:1},
+  {t:"Wärme",q:"Wie lautet die Formel für den Druck?",opts:["p = m · g","p = F · A","p = F / A","p = V / T"],a:2},
+  {t:"Atome",q:"Ein Atom emittiert Licht der Frequenz f = 6·10¹⁴ Hz. Wie groß ist die Energie des Photons? (h = 6,626·10⁻³⁴ J·s)",opts:["ca. 3,98·10⁻¹⁹ J","ca. 1·10⁻¹⁹ J","ca. 6·10⁻²⁰ J","ca. 2·10⁻¹⁸ J"],a:0},
+  {t:"Wärme",q:"Was passiert bei Konvektion?",opts:["Energie wird durch Teilchenstoß weitergegeben","Warme Materie steigt auf, kühle sinkt – Kreislauf","Energie wird als Infrarotstrahlung transportiert","Druck steigt durch Teilchenbewegung"],a:1},
+  {t:"Wärme",q:"2 kg Wasser erwärmt sich um 10°C. Berechne Q. (c = 4180 J/(kg·K))",opts:["8360 J","41800 J","83600 J","418 J"],a:2},
+  {t:"Wärme",q:"Ein Gas wird bei konstanter Temperatur von V = 4 L auf V = 2 L komprimiert. Was passiert mit dem Druck?",opts:["Druck halbiert sich","Druck bleibt gleich","Druck verdoppelt sich","Druck wird viermal so groß"],a:2},
+];
+
+let doneDays = new Set();
+let qIdx=0, score=0, answered=false, shuffled=[];
+
+function showPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+function updateCountdown(){
+  const exam=new Date('2026-06-30T08:00:00');
+  const now=new Date();
+  const diff=Math.ceil((exam-now)/(1000*60*60*24));
+  const el=document.getElementById('countdown');
+  if(diff>0) el.textContent='📅 Noch '+diff+' Tag'+(diff===1?'':'e')+' bis zur Physik-Schulaufgabe (Di, 30.06.2026)';
+  else if(diff===0) el.textContent='🎯 Heute ist die Schulaufgabe – viel Erfolg!';
+  else{el.style.background='#e8f5e9';el.style.color='#1a4731';el.style.borderColor='#a5d6a7';el.textContent='✓ Die Schulaufgabe ist vorbei!';}
+}
+
+function buildDays(){
+  const c=document.getElementById('days-container');
+  DAYS.forEach((d,i)=>{
+    const div=document.createElement('div');
+    div.className='day-card';
+    const sess=d.sessions.map(s=>`<div class="session"><span class="stime">${s.time}</span><span class="sblock ${s.type}">${s.text}</span></div>`).join('');
+    div.innerHTML=`<div class="day-header">
+      <span class="badge b-date">${d.date}</span>
+      <span class="badge b-th">${d.th}</span>
+      <span class="day-title">${d.title}</span>
+      <button class="done-btn" id="done-${i}" onclick="markDone(${i})">✓ Erledigt</button>
+    </div>${sess}`;
+    c.appendChild(div);
+  });
+  const exam=document.createElement('div');
+  exam.className='day-card';
+  exam.innerHTML=`<div class="day-header"><span class="badge b-exam">Di, 30.06.</span><span class="day-title" style="font-weight:600;color:#9B1C1C">🎯 SCHULAUFGABE – Physik Klasse 9</span></div><div class="session"><span class="stime">Schule</span><span class="sblock lern">Formeln sitzen, Kopf ist frei – du schaffst das!</span></div>`;
+  c.appendChild(exam);
+}
+
+function markDone(i){
+  const btn=document.getElementById('done-'+i);
+  if(doneDays.has(i)){doneDays.delete(i);btn.classList.remove('done');btn.textContent='✓ Erledigt';}
+  else{doneDays.add(i);btn.classList.add('done');btn.textContent='✓ Fertig!';}
+  const pct=Math.round(doneDays.size/DAYS.length*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=doneDays.size+' von '+DAYS.length+' Einheiten erledigt';
+  document.getElementById('prog-pct').textContent=pct+'%';
+}
+
+function buildTopics(){
+  const c=document.getElementById('topics-container');
+  TOPICS.forEach((t,i)=>{
+    const div=document.createElement('div');
+    div.className='topic-card';
+    const kws=t.kws.map(k=>`<span class="kw ${t.keys[0]}">${k}</span>`).join('');
+    div.innerHTML=`<div class="topic-hdr" onclick="toggleTopic(${i})">
+      <span class="th-tag ${t.tag}">${t.tagLabel}</span>
+      <span class="ttitle">${t.title}</span>
+      <span class="chev" id="chev-${i}">▸</span>
+    </div>
+    <div class="topic-body" id="tbody-${i}">
+      <div class="must-box">⚠️ Muss können: ${t.must}</div>
+      <div class="kw-wrap" style="margin-top:10px">${kws}</div>
+      ${t.body}
+      <div class="tip-box">💡 Tipp: ${t.tip}</div>
+    </div>`;
+    c.appendChild(div);
+  });
+}
+
+function toggleTopic(i){
+  const b=document.getElementById('tbody-'+i);
+  const ch=document.getElementById('chev-'+i);
+  b.classList.toggle('open');
+  ch.textContent=b.classList.contains('open')?'▾':'▸';
+}
+
+function buildExercises(){
+  const c=document.getElementById('exercises-container');
+  EXERCISES.forEach((e,i)=>{
+    const div=document.createElement('div');
+    div.className='ex-card';
+    div.innerHTML=`<div class="ex-num">Aufgabe ${e.num} &nbsp;·&nbsp; Thema ${e.th}</div>
+      <div class="ex-q">${e.q}</div>
+      <div class="ex-hint">💡 Tipp: ${e.hint}</div>
+      <button class="show-btn" onclick="toggleAns(${i},this)">Musterlösung anzeigen</button>
+      <div class="answer" id="ans-${i}"><strong>Musterlösung:</strong><br><br>${e.ans}</div>`;
+    c.appendChild(div);
+  });
+}
+
+function toggleAns(i,btn){
+  const a=document.getElementById('ans-'+i);
+  a.classList.toggle('open');
+  btn.textContent=a.classList.contains('open')?'Musterlösung verbergen':'Musterlösung anzeigen';
+}
+
+function shuffle(arr){return arr.slice().sort(()=>Math.random()-0.5);}
+function initQuiz(){shuffled=shuffle(QUIZ);qIdx=0;score=0;answered=false;renderQ();}
+
+function renderQ(){
+  if(qIdx>=shuffled.length){showScore();return;}
+  const q=shuffled[qIdx];
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('q-counter').textContent='Frage '+(qIdx+1)+' von '+shuffled.length;
+  document.getElementById('q-score').textContent=score+' richtig';
+  const badge=document.getElementById('q-topic-badge');
+  badge.textContent=q.t;
+  badge.style.background=q.t==='Atome'?'#ede9fe':'#fef3e2';
+  badge.style.color=q.t==='Atome'?'#5b21b6':'#854F0B';
+  document.getElementById('q-fb').textContent='';
+  answered=false;
+  const opts=document.getElementById('q-opts');
+  opts.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='qopt';b.textContent=o;
+    b.onclick=()=>selectOpt(i,b,q.a);
+    opts.appendChild(b);
+  });
+}
+
+function selectOpt(i,btn,correct){
+  if(answered)return;answered=true;
+  document.querySelectorAll('.qopt').forEach(o=>o.disabled=true);
+  if(i===correct){btn.classList.add('correct');score++;document.getElementById('q-fb').textContent='✓ Richtig!';}
+  else{btn.classList.add('wrong');document.querySelectorAll('.qopt')[correct].classList.add('correct');document.getElementById('q-fb').textContent='✗ Leider falsch – richtige Antwort ist grün markiert.';}
+  document.getElementById('q-score').textContent=score+' richtig';
+}
+
+function nextQ(){qIdx++;renderQ();}
+
+function showScore(){
+  document.getElementById('quiz-container').style.display='none';
+  document.getElementById('score-box').style.display='block';
+  const pct=Math.round(score/shuffled.length*100);
+  document.getElementById('score-num').textContent=score+'/'+shuffled.length;
+  document.getElementById('score-pct').textContent=pct+'% korrekt';
+  let msg;
+  if(pct>=87) msg='🎉 Ausgezeichnet! Top vorbereitet!';
+  else if(pct>=70) msg='👍 Gut! Noch 1–2 Formeln wiederholen.';
+  else if(pct>=55) msg='📖 Weiter üben – Zusammenfassung nochmal lesen!';
+  else msg='💪 Nicht aufgeben – nochmal von vorne!';
+  document.getElementById('score-msg').textContent=msg;
+}
+
+function restartQuiz(){
+  document.getElementById('quiz-container').style.display='';
+  document.getElementById('score-box').style.display='none';
+  initQuiz();
+}
+
+updateCountdown();
+buildDays();
+buildTopics();
+buildExercises();
+initQuiz();
+</script>
+</body>
+</html>
